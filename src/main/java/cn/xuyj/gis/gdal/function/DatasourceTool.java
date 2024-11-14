@@ -1,6 +1,7 @@
 package cn.xuyj.gis.gdal.function;
 
 import cn.hutool.core.io.FileUtil;
+import cn.xuyj.gis.gdal.config.SystemConstant;
 import org.gdal.ogr.*;
 import org.gdal.osr.SpatialReference;
 
@@ -17,7 +18,7 @@ public class DatasourceTool {
      * @param shp
      */
     public static void openShp(String shp) {
-        String driverName = "ESRI Shapefile";
+        String driverName = SystemConstant.DRIVER_SHP;
         Driver driver = ogr.GetDriverByName(driverName);
         if (driver == null)
             throw new RuntimeException(driverName + "驱动不可用！");
@@ -30,8 +31,35 @@ public class DatasourceTool {
         Layer layer = dataSource.GetLayer(0);
         if (layer == null)
             throw new RuntimeException("获取【" + shpName + "】图层失败！");
+        openLayer(layer);
+    }
 
-        System.out.println("\n******************【" + shpName + "】基本信息******************");
+    /**
+     * 读取gdb（只读）
+     *
+     * @param gdb
+     */
+    public static void openGDB(String gdb) {
+        String driverName = SystemConstant.DRIVER_GDB;
+        Driver driver = ogr.GetDriverByName(driverName);
+        if (driver == null)
+            throw new RuntimeException(driverName + "驱动不可用!");
+
+        DataSource dataSource = driver.Open(gdb, 0);
+        String gdbName = FileUtil.getName(gdb);
+        if (dataSource == null)
+            throw new RuntimeException("【" + gdbName + "】打开失败!");
+        int layerCount = dataSource.GetLayerCount();
+        System.out.println("【" + gdbName + "】图层数量：" + layerCount + "个");
+        for (int i = 0; i < layerCount; i++) {
+            Layer layer = dataSource.GetLayer(i);
+            openLayer(layer);
+        }
+    }
+
+    public static void openLayer(Layer layer) {
+        String name = layer.GetName();
+        System.out.println("\n******************【" + name + "】基本信息******************");
         //几何类型：点、线、面
         String geomTypeName = ogr.GeometryTypeToName(layer.GetGeomType());
         System.out.println("几何类型：" + geomTypeName);
@@ -43,7 +71,7 @@ public class DatasourceTool {
         double[] extent = layer.GetExtent();
         System.out.println("四至范围：" + extent[0] + "," + extent[1] + "," + extent[2] + "," + extent[3]);
 
-        System.out.println("\n********************【" + shpName + "】属性表信息********************");
+        System.out.println("\n********************【" + name + "】属性表信息********************");
         //属性表
         FeatureDefn featureDefn = layer.GetLayerDefn();
         int fieldCount = featureDefn.GetFieldCount();
@@ -61,7 +89,7 @@ public class DatasourceTool {
             System.out.println("\t字段精度(小数位数)：【" + fieldPrecision + "】");
         }
 
-        System.out.println("\n********************【" + shpName + "】地块信息********************");
+        System.out.println("\n********************【" + name + "】地块信息********************");
         //地块数量
         long featureCount = layer.GetFeatureCount();
         System.out.println("地块数量：" + featureCount);

@@ -21,4 +21,16 @@ public class DataourceToolTest {
         String shp = "E:\\work\\data\\shp\\polygon.shp";
         DatasourceTool.openShp(shp);
     }
+
+    @Test
+    public void testOpenGDB() {
+        ogr.RegisterAll();
+        //支持中文路径
+        gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "YES");
+        //属性表支持中文
+        gdal.SetConfigOption("SHAPE_ENCODING", "CP936");
+
+        String gdb = "E:\\work\\data\\gdb\\xsd.gdb";
+        DatasourceTool.openGDB(gdb);
+    }
 }
