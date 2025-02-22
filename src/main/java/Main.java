@@ -4,6 +4,8 @@ import org.gdal.ogr.ogr;
 
 public class Main {
     public static void main(String[] args) {
+        ogr.RegisterAll();
+        gdal.AllRegister();
         int vectorDriverCount = ogr.GetDriverCount();
         int rasterDriverCount = gdal.GetDriverCount();
         System.out.println("矢量数据格式：");
