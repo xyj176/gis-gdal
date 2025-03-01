@@ -18,7 +18,7 @@ public class DatasourceTool {
      * @param shp
      */
     public static void openShp(String shp) {
-        String driverName = SystemConstant.DRIVER_SHP;
+        String driverName = SystemConstant.Driver.SHP;
         Driver driver = ogr.GetDriverByName(driverName);
         if (driver == null)
             throw new RuntimeException(driverName + "驱动不可用！");
@@ -40,7 +40,7 @@ public class DatasourceTool {
      * @param gdb
      */
     public static void openGDB(String gdb) {
-        String driverName = SystemConstant.DRIVER_GDB;
+        String driverName = SystemConstant.Driver.GDB;
         Driver driver = ogr.GetDriverByName(driverName);
         if (driver == null)
             throw new RuntimeException(driverName + "驱动不可用!");
@@ -55,6 +55,15 @@ public class DatasourceTool {
             Layer layer = dataSource.GetLayer(i);
             openLayer(layer);
         }
+    }
+
+    public static void openPostgresql(String connStr) {
+        String postgresql = SystemConstant.Driver.POSTGRESQL;
+        Driver driver = getDriver(postgresql);
+        DataSource ds = driver.Open(connStr, 0);
+        Layer layer = ds.GetLayer(0);
+        openLayer(layer);
+
     }
 
     public static void openLayer(Layer layer) {
@@ -111,5 +120,12 @@ public class DatasourceTool {
             String json = geometry.ExportToJson();
             System.out.println("\t第【" + featureIndex + "】个地块的GeoJson：" + json);
         }
+    }
+
+    private static Driver getDriver(String driverName) {
+        Driver driver = ogr.GetDriverByName(driverName);
+        if (driver == null)
+            throw new RuntimeException(driverName + "驱动不可用!");
+        return driver;
     }
 }

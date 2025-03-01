@@ -1,4 +1,5 @@
 import cn.xuyj.gis.gdal.function.DatasourceTool;
+import cn.xuyj.gis.gdal.util.InitUtil;
 import org.gdal.gdal.gdal;
 import org.gdal.ogr.ogr;
 import org.junit.jupiter.api.Test;
@@ -32,5 +33,18 @@ public class DataourceToolTest {
 
         String gdb = "E:\\work\\data\\gdb\\xsd.gdb";
         DatasourceTool.openGDB(gdb);
+    }
+
+    @Test
+    public void testOpenPostgresql() {
+        InitUtil.init();
+
+        String database = "test";
+        String host = "localhost";
+        Integer port = 5432;
+        String user = "xyj";
+        String password = "1234";
+        String connStr = String.format("PG:dbname='%s' host='%s' port='%s' user='%s' password='%s'", database, host, port, user, password);
+        DatasourceTool.openPostgresql(connStr);
     }
 }

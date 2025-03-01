@@ -9,6 +9,10 @@ import com.sun.scenario.effect.impl.sw.sse.SSEBlend_HARD_LIGHTPeer;
  * @Desc：系统常量
  */
 public class SystemConstant {
-    public static final String DRIVER_SHP = "ESRI Shapefile";
-    public static final String DRIVER_GDB = "OpenFileGDB";
+    public static class Driver{
+        public static final String SHP = "ESRI Shapefile";
+        public static final String GDB = "OpenFileGDB";
+        public static final String POSTGRESQL = "Postgresql";
+    }
+
 }

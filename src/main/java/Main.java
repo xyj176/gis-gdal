@@ -4,7 +4,6 @@ import org.gdal.ogr.ogr;
 
 public class Main {
     public static void main(String[] args) {
-        ogr.RegisterAll();
         gdal.AllRegister();
         int vectorDriverCount = ogr.GetDriverCount();
         int rasterDriverCount = gdal.GetDriverCount();
@@ -20,5 +19,6 @@ public class Main {
             String longName = driver.getShortName();
             System.out.println(longName);
         }
+        gdal.GDALDestroyDriverManager();
     }
 }
